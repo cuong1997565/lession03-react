@@ -4,12 +4,38 @@ class TaskForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            id : '',
             name : '',
             status : false
         }
     }
     onCloseForm = () => {
         this.props.onCloseForm();
+    }
+    componentWillMount () {
+        if(this.props.task) {
+            this.setState({
+                id : this.props.task.id,
+                name : this.props.task.name,
+                status : this.props.task.status
+            });
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+       if(nextProps && nextProps.task) {
+        this.setState({
+            id : nextProps.task.id,
+            name : nextProps.task.name,
+            status : nextProps.task.status
+        });
+       } else if(nextProps && nextProps.task === null) {
+          this.setState({
+            id : '',
+            name : '',
+            status : false
+          })
+       }
     }
 
     onChange = (event) => {
@@ -39,11 +65,12 @@ class TaskForm extends Component {
     }
 
     render() {
+        var  { id } = this.state;
         return (
             <div className="panel panel-warning">
                 <div className="panel-heading">
                     <h3 className="panel-title">
-                       Thêm Công Việc
+                        { id !== '' ? 'Cap Nhap Cong Viec' : 'Thêm Công Việc' } 
                         <span
                             className="fa fa-times-circle text-right"
                             onClick= { this.onCloseForm }
